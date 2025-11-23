@@ -49,7 +49,7 @@ parso
 pillow
 platformdirs
 prompt_toolkit
-protobuf
+protobuf==3.20.3
 psutil
 pure_eval
 pyarrow
