@@ -1,7 +1,5 @@
-
-
 streamlit
 tensorflow==2.20.0
-keras==3.6.0
+keras==3.10.0
 numpy==1.26.4
 pillow
