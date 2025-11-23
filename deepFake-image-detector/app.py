@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 
 # Load the model
-model = load_model('./deepfakeImg_detector_1.keras')
+model = load_model('deepFake-image-detector/deepfakeImg_detector_1.keras')
 
 # Function to process the uploaded image
 def process_image(uploaded_file):
