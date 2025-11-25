@@ -35,28 +35,36 @@ def predict_next_words(text, top_k=4):
 
 st.title("Smart Keyboard – Next Word Predictor")
 
-# Keep the text in session_state so we can modify it when user clicks a suggestion
-if "text" not in st.session_state:
-    st.session_state.text = ""
+# --- Session state setup ---
+if "text_input" not in st.session_state:
+    st.session_state.text_input = ""
 
-text = st.text_input("Type your sentence:", st.session_state.text, key="text_input")
+# Text input bound directly to session state
+text = st.text_input(
+    "Type your sentence:",
+    value=st.session_state.text_input,
+    key="text_input",
+)
 
-# Sync back into session_state
-st.session_state.text = text
+# Always work from the latest text in session_state
+current_text = st.session_state.text_input
 
+# --- Generate suggestions whenever last char is space ---
 suggestions = []
-# Only predict when the last character is whitespace (user pressed space)
-if st.session_state.text and st.session_state.text[-1].isspace():
-    suggestions = predict_next_words(st.session_state.text)
+if current_text and current_text[-1].isspace():
+    suggestions = predict_next_words(current_text)
 
 if suggestions:
     st.subheader("Suggestions")
     cols = st.columns(len(suggestions))
     for i, word in enumerate(suggestions):
         if cols[i].button(word, key=f"suggestion_{i}"):
-            # Append chosen word and a space, then rerun
-            st.session_state.text = (st.session_state.text or "") + word + " "
+            # 1) Append chosen word + space
+            new_text = (current_text or "") + word + " "
+            # 2) Update the text input's state
+            st.session_state.text_input = new_text
+            # 3) Force an immediate rerun so new suggestions appear
             st.rerun()
 
 st.write("Current text:")
-st.write(st.session_state.text)
+st.write(st.session_state.text_input)
