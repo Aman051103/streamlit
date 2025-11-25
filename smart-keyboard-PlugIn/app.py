@@ -3,14 +3,25 @@ import numpy as np
 import pickle
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from pathlib import Path
 
-# Load tokenizer and model
+BASE_DIR = Path(__file__).resolve().parent
+
 @st.cache_resource
 def load_resources():
-    with open("tokenizer.pkl", "rb") as f:
+    tokenizer_path = BASE_DIR / "tokenizer.pkl"
+    model_path = BASE_DIR / "nexpree1.keras"
+
+    if not tokenizer_path.exists():
+        raise FileNotFoundError(f"Tokenizer not found at {tokenizer_path}")
+    if not model_path.exists():
+        raise FileNotFoundError(f"Model not found at {model_path}")
+
+    with open(tokenizer_path, "rb") as f:
         tokenizer = pickle.load(f)
-    model = load_model("nexpree1.keras")
+    model = load_model(model_path)
     return tokenizer, model
+# Load tokenizer and model
 
 tokenizer, model = load_resources()
 max_len = 107  # from your README
